@@ -63,9 +63,7 @@ def _rnn_reformat(x, input_dims, n_steps):
     x_ = tf.transpose(x, [1, 0, 2])
     # reshape to (n_steps*batch_size, input_dims)
     x_ = tf.reshape(x_, [-1, input_dims])
-    # split to get a list of 'n_steps' tensors of shape (batch_size, input_dims)
-    x_reformat = tf.split(x_, n_steps, 0)
-    return x_reformat
+    return tf.split(x_, n_steps, 0)
 
 
 def _rnn_reformat_denoise(x, input_dims, n_steps, batch_size):
@@ -82,9 +80,7 @@ def _rnn_reformat_denoise(x, input_dims, n_steps, batch_size):
     x_ = tf.transpose(x, [1, 0, 2])
     # reshape to (n_steps*batch_size, input_dims)
     x_ = tf.reshape(x_, [-1, input_dims])
-    # split to get a list of 'n_steps' tensors of shape (batch_size, input_dims)
-    x_reformat = tf.split(x_, n_steps, 0)
-    return x_reformat
+    return tf.split(x_, n_steps, 0)
 
 
 def load_data(filename):
@@ -134,7 +130,7 @@ def cluster_acc(y_true, y_pred):
         w[y_pred[i], y_true[i]] += 1
     from sklearn.utils.linear_assignment_ import linear_assignment
     ind = linear_assignment(w.max() - w)
-    return sum([w[i, j] for i, j in ind]) * 1.0 / y_pred.size
+    return sum(w[i, j] for i, j in ind) * 1.0 / y_pred.size
 
 
 def next_batch(batch_size, data):
